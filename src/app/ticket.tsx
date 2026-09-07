@@ -1,5 +1,5 @@
 import { useBooking } from "@/context/BookingContext";
-import * as MediaLibrary from "expo-media-library";
+import * as MediaLibrary from "expo-media-library/legacy";
 import { useRouter } from "expo-router";
 import { useMemo, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
@@ -114,7 +114,7 @@ const Ticket = () => {
                 </View>
                 <Avatar.Image
                   size={50}
-                  source={require("../assets/images/icon.png")}
+                  source={require("../../assets/images/icon.png")}
                   style={{ backgroundColor: "#25232a" }}
                 />
               </View>

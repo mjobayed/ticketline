@@ -121,19 +121,19 @@ const Payment = () => {
   const methods = [
     {
       name: "bKash",
-      icon: require("../assets/images/bkash.png"),
+      icon: require("../../assets/images/bkash.png"),
     },
     {
       name: "Nagad",
-      icon: require("../assets/images/nagad.webp"),
+      icon: require("../../assets/images/nagad.webp"),
     },
     {
       name: "Rocket",
-      icon: require("../assets/images/rocket.png"),
+      icon: require("../../assets/images/rocket.png"),
     },
     {
       name: "Upay",
-      icon: require("../assets/images/upay.png"),
+      icon: require("../../assets/images/upay.png"),
     },
   ];
   return (
