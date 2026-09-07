@@ -151,7 +151,10 @@ const Payment = () => {
         <Appbar.Action icon="home" onPress={() => router.navigate("/")} />
       </Appbar.Header>
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+      >
         {step === "SUCCESS" ? (
           <View style={styles.successWrapper}>
             <Avatar.Icon size={100} icon="check-decagram" />
