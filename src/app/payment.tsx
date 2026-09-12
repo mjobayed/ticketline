@@ -17,6 +17,8 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAuth } from "@/context/AuthContext";
+import { getTicketHistoryKey } from "@/utils/storageKeys";
 
 type Step = "SELECT" | "ACCOUNT" | "PIN" | "OTP" | "SUCCESS";
 
@@ -28,6 +30,7 @@ const Payment = () => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const theme = useTheme();
+  const { user } = useAuth();
   const { totalPrice, selectedBus, selectedSeats, tripDetails, setTxnId } =
     useBooking();
   const [step, setStep] = useState<Step>("SELECT");
@@ -67,10 +70,11 @@ const Payment = () => {
         time: new Date().toLocaleTimeString(),
       };
 
-      const existingData = await AsyncStorage.getItem("ticket_history");
+      const historyKey = getTicketHistoryKey(user?.phone);
+      const existingData = await AsyncStorage.getItem(historyKey);
       const history = existingData ? JSON.parse(existingData) : [];
       await AsyncStorage.setItem(
-        "ticket_history",
+        historyKey,
         JSON.stringify([ticketObject, ...history]),
       );
     } catch (err) {
