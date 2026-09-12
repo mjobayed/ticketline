@@ -16,6 +16,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { getTicketHistoryKey } from "@/utils/storageKeys";
 
 const Profile = () => {
   const insets = useSafeAreaInsets();
@@ -28,7 +29,9 @@ const Profile = () => {
   useEffect(() => {
     const getStats = async () => {
       try {
-        const history = await AsyncStorage.getItem("ticket_history");
+        const history = await AsyncStorage.getItem(
+          getTicketHistoryKey(user?.phone),
+        );
         if (history) {
           const parsed = JSON.parse(history);
           setTicketCount(parsed.length);
@@ -38,7 +41,7 @@ const Profile = () => {
       }
     };
     getStats();
-  }, []);
+  }, [user?.phone]);
 
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to sign out?", [

@@ -16,6 +16,8 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAuth } from "@/context/AuthContext";
+import { getTicketHistoryKey } from "@/utils/storageKeys";
 
 interface TicketHistoryItem {
   txnId: string;
@@ -32,6 +34,7 @@ const RecentTickets = () => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const theme = useTheme();
+  const { user } = useAuth();
   const { setBus, setSeats, setTripDetails, setTotalPrice, setTxnId } =
     useBooking();
   const [loading, setLoading] = useState(true);
@@ -41,7 +44,7 @@ const RecentTickets = () => {
   const loadHistory = async () => {
     setLoading(true);
     try {
-      const data = await AsyncStorage.getItem("ticket_history");
+      const data = await AsyncStorage.getItem(getTicketHistoryKey(user?.phone));
       if (data) {
         setHistory(JSON.parse(data));
       }
@@ -55,7 +58,7 @@ const RecentTickets = () => {
   useFocusEffect(
     useCallback(() => {
       loadHistory();
-    }, []),
+    }, [user?.phone]),
   );
 
   const handleViewTicket = (item: TicketHistoryItem) => {
