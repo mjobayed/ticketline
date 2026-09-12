@@ -62,6 +62,7 @@ const Signup = () => {
           ...prev,
           phone: "This phone number is already registered.",
         }));
+        return;
       }
 
       const newUser = { name, phone, password };
