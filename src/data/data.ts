@@ -13,7 +13,9 @@ export interface BusTicketData {
   totalSeats: number;
   unavailableSeats: string[];
   startingTime: string;
+  startingTimeValue: number;
   reportingTime: string;
+  reportingTimeValue: number;
   boardingPoint: string;
   price: number;
 }
@@ -251,9 +253,11 @@ export const generateBusData = (criteria: TripDetailsType): BusTicketData[] => {
     }
 
     baseDate.setHours(getRandomInt(6, 23), getRandomItem([0, 15, 30, 45]));
+    const startingTimeValue = baseDate.getTime();
     const startingTime = formatTime(baseDate);
 
     const reportingDate = new Date(baseDate.getTime() - 15 * 60000);
+    const reportingTimeValue = reportingDate.getTime();
     const reportingTime = formatTime(reportingDate);
 
     const priceVariation = Math.floor(Math.random() * 5) * 50 - 50;
@@ -267,15 +271,13 @@ export const generateBusData = (criteria: TripDetailsType): BusTicketData[] => {
       totalSeats,
       unavailableSeats,
       startingTime,
+      startingTimeValue,
       reportingTime,
+      reportingTimeValue,
       boardingPoint: getRandomItem(availableBoardingPoints),
       price,
     });
   }
 
-  return buses.sort((a, b) => {
-    const timeA = new Date(`1970/01/01 ${a.startingTime}`);
-    const timeB = new Date(`1970/01/01 ${b.startingTime}`);
-    return timeA.getTime() - timeB.getTime();
-  });
+  return buses.sort((a, b) => a.startingTimeValue - b.startingTimeValue);
 };
