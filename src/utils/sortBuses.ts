@@ -16,9 +16,6 @@ export const SORT_OPTIONS: { value: SortOption; label: string }[] = [
 const getAvailableSeats = (bus: BusTicketData): number =>
   bus.totalSeats - bus.unavailableSeats.length;
 
-const getBoardingTimestamp = (bus: BusTicketData): number =>
-  new Date(`1970/01/01 ${bus.reportingTime}`).getTime();
-
 export const sortBuses = (
   buses: BusTicketData[],
   sortOption: SortOption,
@@ -31,9 +28,7 @@ export const sortBuses = (
     case "price-desc":
       return sorted.sort((a, b) => b.price - a.price);
     case "fastest-boarding":
-      return sorted.sort(
-        (a, b) => getBoardingTimestamp(a) - getBoardingTimestamp(b),
-      );
+      return sorted.sort((a, b) => a.reportingTimeValue - b.reportingTimeValue);
     case "seats-desc":
       return sorted.sort((a, b) => getAvailableSeats(b) - getAvailableSeats(a));
     case "seats-asc":
