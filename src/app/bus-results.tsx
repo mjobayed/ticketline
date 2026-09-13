@@ -19,9 +19,16 @@ import {
   Surface,
   Text,
   useTheme,
+  Button,
+  Menu,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DEFAULT_SORT_OPTION, SortOption, sortBuses } from "@/utils/sortBuses";
+import {
+  DEFAULT_SORT_OPTION,
+  SORT_OPTIONS,
+  SortOption,
+  sortBuses,
+} from "@/utils/sortBuses";
 
 const BusResults = () => {
   const insets = useSafeAreaInsets();
@@ -34,6 +41,7 @@ const BusResults = () => {
   if (!tripDetails) return null;
   const { from, to, month, day } = tripDetails;
   const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
+  const [sortMenuVisible, setSortMenuVisible] = useState(false);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -54,6 +62,15 @@ const BusResults = () => {
     () => sortBuses(buses, sortOption),
     [buses, sortOption],
   );
+
+  const currentSortLabel = SORT_OPTIONS.find(
+    (option) => option.value === sortOption,
+  )?.label;
+
+  const handleSortSelect = (option: SortOption) => {
+    setSortOption(option);
+    setSortMenuVisible(false);
+  };
 
   const handleCardPress = (item: BusTicketData) => {
     setTripDetails({ from, to, month, day });
@@ -152,6 +169,32 @@ const BusResults = () => {
       </Appbar.Header>
       <InfoCard from={from} to={to} month={month} day={day} />
 
+      <View style={styles.sortRow}>
+        <Text variant="labelLarge">{currentSortLabel}</Text>
+        <Menu
+          visible={sortMenuVisible}
+          onDismiss={() => setSortMenuVisible(false)}
+          anchor={
+            <Button
+              mode="text"
+              icon="sort"
+              onPress={() => setSortMenuVisible(true)}
+            >
+              Sort
+            </Button>
+          }
+        >
+          {SORT_OPTIONS.map((option) => (
+            <Menu.Item
+              key={option.value}
+              title={option.label}
+              leadingIcon={option.value === sortOption ? "check" : undefined}
+              onPress={() => handleSortSelect(option.value)}
+            />
+          ))}
+        </Menu>
+      </View>
+
       <View style={styles.listContainer}>
         <FlatList
           data={sortedBuses}
@@ -226,6 +269,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+
+  sortRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 4,
   },
 });
 
