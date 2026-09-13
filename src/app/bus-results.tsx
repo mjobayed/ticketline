@@ -4,7 +4,7 @@ import { useBooking } from "@/context/BookingContext";
 import { BusTicketData, generateBusData, TripDetailsType } from "@/data/data";
 import useDelayedNavigation from "@/utils/DelayedNavigation";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   ListRenderItem,
@@ -21,6 +21,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { DEFAULT_SORT_OPTION, SortOption, sortBuses } from "@/utils/sortBuses";
 
 const BusResults = () => {
   const insets = useSafeAreaInsets();
@@ -32,6 +33,7 @@ const BusResults = () => {
   const { isLoading, navigateWithDelay } = useDelayedNavigation();
   if (!tripDetails) return null;
   const { from, to, month, day } = tripDetails;
+  const [sortOption, setSortOption] = useState<SortOption>(DEFAULT_SORT_OPTION);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -46,6 +48,12 @@ const BusResults = () => {
     setBuses(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const sortedBuses = useMemo(
+    () => sortBuses(buses, sortOption),
+    [buses, sortOption],
+  );
 
   const handleCardPress = (item: BusTicketData) => {
     setTripDetails({ from, to, month, day });
@@ -146,7 +154,7 @@ const BusResults = () => {
 
       <View style={styles.listContainer}>
         <FlatList
-          data={buses}
+          data={sortedBuses}
           keyExtractor={(item) => item.busId}
           renderItem={renderBusCard}
           contentContainerStyle={styles.listContent}
